@@ -106,7 +106,7 @@ class Renderer {
         self.session = session
         self.device = device
         self.renderDestination = renderDestination
-        matteGenerator = ARMatteGenerator(device: device, matteResolution: .half)
+        matteGenerator = ARMatteGenerator(device: device, matteResolution: .full)
         loadMetal()
         loadAssets()
     }
@@ -641,6 +641,15 @@ class Renderer {
         renderEncoder.setFragmentTexture(sceneDepthTexture, index: 3)
         renderEncoder.setFragmentTexture(alphaTexture, index: 4)
         renderEncoder.setFragmentTexture(dilatedDepthTexture, index: 5)
+        
+//        print(dilatedDepthTexture?.width)
+//        print(dilatedDepthTexture?.height)
+//        print(dilatedDepthTexture?.pixelFormat.rawValue)
+//        print(dilatedDepthTexture?.textureType)
+//        print("a")
+//        print(alphaTexture?.width)
+//        print(alphaTexture?.height)
+//        print(alphaTexture?.pixelFormat.rawValue)
 
         // Draw final quad to display
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
