@@ -1,5 +1,7 @@
 # AR Depth
 
+This iOS app displays the segmented depth image created by Apple's Arkit3.
+
 ![img1](readme_assets/depth.gif)
 
 The app passes the AR camera information, including the depth texture and the segmentation buffer to the shader, which then compiles the textures as shown below in [Shaders.metal](https://github.com/khanniie/xcode-depth/blob/master/ARMatteExampleSwift/Shaders.metal#L201):
