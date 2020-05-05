@@ -199,10 +199,6 @@ vertex CompositeColorInOut compositeImageVertexTransform(const device CompositeV
 
 // Composite the image fragment function.
 fragment half4 compositeImageFragmentShader(CompositeColorInOut in [[ stage_in ]],
-                                    texture2d<float, access::sample> capturedImageTextureY [[ texture(0) ]],
-                                    texture2d<float, access::sample> capturedImageTextureCbCr [[ texture(1) ]],
-                                    texture2d<float, access::sample> sceneColorTexture [[ texture(2) ]],
-                                    depth2d<float, access::sample> sceneDepthTexture [[ texture(3) ]],
                                     texture2d<float, access::sample> alphaTexture [[ texture(4) ]],
                                     texture2d<float, access::sample> dilatedDepthTexture [[ texture(5) ]],
                                     constant SharedUniforms &uniforms [[ buffer(kBufferIndexSharedUniforms) ]])
@@ -210,34 +206,14 @@ fragment half4 compositeImageFragmentShader(CompositeColorInOut in [[ stage_in ]
     constexpr sampler s(address::clamp_to_edge, filter::linear);
 
     float2 cameraTexCoord = in.texCoordCamera;
-    float2 sceneTexCoord = in.texCoordScene;
-
-    // Sample Y and CbCr textures to get the YCbCr color at the given texture coordinate.
-    float4 rgb = ycbcrToRGBTransform(capturedImageTextureY.sample(s, cameraTexCoord), capturedImageTextureCbCr.sample(s, cameraTexCoord));
-
-    // Perform composition with the matting.
-    half4 sceneColor = half4(sceneColorTexture.sample(s, sceneTexCoord));
-    float sceneDepth = sceneDepthTexture.sample(s, sceneTexCoord);
-
-    half4 cameraColor = half4(rgb);
     half alpha = half(alphaTexture.sample(s, cameraTexCoord).r);
-    //return alpha;
-
-    half showOccluder = 1.0;
 
     if (uniforms.useDepth) {
         float dilatedLinearDepth = half(dilatedDepthTexture.sample(s, cameraTexCoord).r);
-
-        // Project linear depth with the projection matrix.
-//        float dilatedDepth = clamp((uniforms.projectionMatrix[2][2] * -dilatedLinearDepth + uniforms.projectionMatrix[3][2]) / (uniforms.projectionMatrix[2][3] * -dilatedLinearDepth + uniforms.projectionMatrix[3][3]), 0.0, 1.0);
-//
-//        showOccluder = (half)step(dilatedDepth, sceneDepth); // forwardZ case
         dilatedLinearDepth = (dilatedLinearDepth > 1) ? 1: ((dilatedLinearDepth < 0) ? 0 : dilatedLinearDepth);
         return alpha * (0.1 + 0.9 * (1 - dilatedLinearDepth));
     }
     
-    half4 occluderResult = mix(sceneColor, cameraColor, alpha);
-    half4 mattingResult = mix(sceneColor, occluderResult, showOccluder);
     return half(dilatedDepthTexture.sample(s, cameraTexCoord).r);
 }
 

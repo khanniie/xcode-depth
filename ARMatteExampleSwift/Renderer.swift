@@ -642,14 +642,15 @@ class Renderer {
         renderEncoder.setFragmentTexture(alphaTexture, index: 4)
         renderEncoder.setFragmentTexture(dilatedDepthTexture, index: 5)
         
-//        print(dilatedDepthTexture?.width)
-//        print(dilatedDepthTexture?.height)
-//        print(dilatedDepthTexture?.pixelFormat.rawValue)
-//        print(dilatedDepthTexture?.textureType)
-//        print("a")
-//        print(alphaTexture?.width)
-//        print(alphaTexture?.height)
-//        print(alphaTexture?.pixelFormat.rawValue)
+        //uncomment below if you want to print the properties of the textures
+        
+        //  print(dilatedDepthTexture?.width)
+        //  print(dilatedDepthTexture?.height)
+        //  print(dilatedDepthTexture?.pixelFormat.rawValue)
+        //  print(dilatedDepthTexture?.textureType)
+        //  print(alphaTexture?.width)
+        //  print(alphaTexture?.height)
+        //  print(alphaTexture?.pixelFormat.rawValue)
 
         // Draw final quad to display
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
