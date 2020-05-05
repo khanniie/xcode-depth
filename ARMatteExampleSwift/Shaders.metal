@@ -204,16 +204,27 @@ fragment half4 compositeImageFragmentShader(CompositeColorInOut in [[ stage_in ]
                                     constant SharedUniforms &uniforms [[ buffer(kBufferIndexSharedUniforms) ]])
 {
     constexpr sampler s(address::clamp_to_edge, filter::linear);
-
+    
+    //get coordinate
     float2 cameraTexCoord = in.texCoordCamera;
+    
+    //get value of segmentation buffer
     half alpha = half(alphaTexture.sample(s, cameraTexCoord).r);
 
     if (uniforms.useDepth) {
+        //get value of depth buffer
         float dilatedLinearDepth = half(dilatedDepthTexture.sample(s, cameraTexCoord).r);
+        
+        //clamp to between 0 or 1 (documentation says depth value represents distance in meters)
         dilatedLinearDepth = (dilatedLinearDepth > 1) ? 1: ((dilatedLinearDepth < 0) ? 0 : dilatedLinearDepth);
+        
+        //combine segmentation buffer with depth value to get a cleaner result
+        //floor at 0.1 so that you can at least see the outline of the arm if the depth value is too small
+        //we also "invert" the value of the depth so that closer is brighter
         return alpha * (0.1 + 0.9 * (1 - dilatedLinearDepth));
     }
     
+    //just in case useDepth is false, we return something anyways
     return half(dilatedDepthTexture.sample(s, cameraTexCoord).r);
 }
 
