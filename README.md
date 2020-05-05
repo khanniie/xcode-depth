@@ -16,5 +16,10 @@ dilatedLinearDepth = (dilatedLinearDepth > 1) ? 1: ((dilatedLinearDepth < 0) ? 0
 return alpha * (0.1 + 0.9 * (1 - dilatedLinearDepth));
 ```
 
+## Files
+- [ViewController.swift](https://github.com/khanniie/xcode-depth/blob/master/ARMatteExampleSwift/ViewController.swift): Sets up the AR Session and the app view.
+- [Shaders.metal](https://github.com/khanniie/xcode-depth/blob/master/ARMatteExampleSwift/Shaders.metal): Shader code that compiles the textures and outputs the image.
+- [Renderer.swift](https://github.com/khanniie/xcode-depth/blob/master/ARMatteExampleSwift/Renderer.swift): Updates textures according to the AR frame and passes them to the shader
+
 ## Credits
 based on Apple's ["Effecting People Occlusion in Custom Renderers"](https://developer.apple.com/documentation/arkit/effecting_people_occlusion_in_custom_renderers) code
