@@ -1,6 +1,6 @@
 # AR Depth
 
-This iOS app displays the segmented depth image created by Apple's Arkit3.
+This iOS app displays the segmented depth image created by Apple's Arkit3. It was written in Swift and Metal.
 
 ![img1](readme_assets/depth.gif)
 
